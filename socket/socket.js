@@ -7,7 +7,7 @@ const express =require('express')
  const server = http.createServer(app)
  const io = new Server(server,{
     cors:{
-        origin: ['']
+        origin: ['https://app-chat-frontend-k7eo.onrender.com']
     }
 })
 
