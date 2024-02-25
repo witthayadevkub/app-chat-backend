@@ -23,15 +23,15 @@ readdirSync('./routes').map((r)=> app.use('/api',require('./routes/'+r)))
 // });
 
 app.get("/home", (req, res) => {
-      res.json({home: "successfully"})
+      res.json({home: "successfully", check: process.env.HELLO})
 });
 //connect db
 const connectDB = async () => {
     try{
-        await mongoose.connect('mongodb+srv://witthaya:021002@cluster0.4pxvhei.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
+        await mongoose.connect(process.env.MONGODB_URL)
         console.log('connected db successfully')
     } catch(err) {
-        console.log(err)
+        console.log("server error :"+err)
     }
 }
 
