@@ -9,14 +9,9 @@ const io = new Server(
   server,
   {
     cors: {
-      origin: ["http://localhost:3000"],
+      origin: ["https://app-chat-frontend-sn5q.onrender.com"],
     },
   }
-  // ,{
-  //     cors:{
-  //         origin: ['https://app-chat-frontend-k7eo.onrender.com']
-  //     }
-  // }
 );
 
 const getReceiverSocketId = (receiverId) => {
