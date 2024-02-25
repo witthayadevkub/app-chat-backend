@@ -16,6 +16,16 @@ exports.getUser = async (req, res) => {
   }
 };
 
+exports.users = async (req, res) => {
+  try {
+    const filterUsers = await User.find().select("-password")
+    res.status(200).json(filterUsers)
+  } catch (error) {
+    console.log("Error in getUser", error);
+    res.status(500).json({ error: error });
+  }
+};
+
 exports.current_user = async (req, res) => {
   try {
     const currentUserId = req.user.id
