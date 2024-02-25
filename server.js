@@ -28,8 +28,7 @@ app.get("/home", (req, res) => {
 //connect db
 const connectDB = async () => {
     try{
-      const url = "mongodb+srv://admin:021002@cluster0.zf083dl.mongodb.net/appchat"
-        await mongoose.connect('mongodb+srv://admin:021002@cluster0.zf083dl.mongodb.net/appchat')
+        await mongoose.connect( process.env.MONGODB_URL)
         console.log('connected db successfully')
     } catch(err) {
         console.log(err)

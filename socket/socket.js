@@ -1,40 +1,46 @@
-const { Server } = require('socket.io')
-const http = require('http') 
-const express =require('express')
+const { Server } = require("socket.io");
+const http = require("http");
+const express = require("express");
 
- const app = express()
+const app = express();
+const url = process.env.FRONTEND_URL
+const server = http.createServer(app);
+const io = new Server(
+  server,
+  {
+    cors: {
+      origin: ["http://localhost:3000"],
+    },
+  }
+  // ,{
+  //     cors:{
+  //         origin: ['https://app-chat-frontend-k7eo.onrender.com']
+  //     }
+  // }
+);
 
- const server = http.createServer(app)
- const io = new Server(server,{
-    cors:{
-        origin: ['https://app-chat-frontend-k7eo.onrender.com']
-    }
-})
+const getReceiverSocketId = (receiverId) => {
+  return userSocketMep[receiverId];
+};
 
-const getReceiverSocketId = (receiverId) =>{
-    return userSocketMep[receiverId]
-}
+const userSocketMep = {};
 
-const userSocketMep ={}
+io.on("connection", (socket) => {
+  console.log("a user connected", socket.id);
+  const userId = socket.handshake.query.userId;
+  // console.log(userId)
+  if (userId != "undefined") {
+    userSocketMep[userId] = socket.id;
+  }
 
-io.on('connection', (socket)=>{
-    console.log('a user connected',socket.id)
-    const userId = socket.handshake.query.userId
-    // console.log(userId)
-    if(userId != "undefined"){
-        userSocketMep[userId] = socket.id
-    }
+  io.emit("getOnlineUsers", Object.keys(userSocketMep));
 
-    io.emit("getOnlineUsers",Object.keys(userSocketMep))
+  socket.on("disconnect", () => {
+    console.log("a user disconnected", socket.id);
+    delete userSocketMep[userId];
+    io.emit("getOnlineUsers", Object.keys(userSocketMep));
+    // userSocketMep[userId] = socket.id
+  });
+});
 
-    socket.on('disconnect', ()=>{
-        console.log('a user disconnected',socket.id)
-        delete userSocketMep[userId]
-        io.emit("getOnlineUsers", Object.keys(userSocketMep));
-        // userSocketMep[userId] = socket.id
-    })
-})
-
-
-
-module.exports = { app, server, io, getReceiverSocketId}
+module.exports = { app, server, io, getReceiverSocketId };
